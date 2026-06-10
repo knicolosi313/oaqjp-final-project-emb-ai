@@ -11,8 +11,10 @@ def emotion_detector(text_to_analyze):
         dominant_emotion = find_dominant_emotion(emotions)
         emotions['dominant_emotion'] = dominant_emotion
         return emotions
+    elif response.status_code == 400:
+        return {"anger": None, "disgust": None, "fear": None, "joy": None, "sadness": None, "dominant_emotion": None}
     else:
-        return {'error': 'An error ocurred'}, 500
+        return {'error': 'Invalid'}, response.status_code
 
 
 def emotion_extractor(raw_text):

@@ -1,21 +1,29 @@
+"""Server module for handling Flask routes."""
+
+import json
 from flask import Flask, request, render_template
 from EmotionDetection.emotion_detection import emotion_detector
-import json
+
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
+    """Renders homepage template."""
     return render_template("index.html")
 
 @app.route('/emotionDetector')
 def emotion_detect():
+    """Handles emotion detector functionality"""
     text = request.args.get('textToAnalyze')
     result = emotion_detector(text)
     dominant = result.pop("dominant_emotion")
+    if not dominant:
+        return 'Invalid text! Please try again!'
     result = json.dumps(result)
     result = result.replace("{","").replace("}","")
-    return f"For the given statement, the system response is {result}. The dominant emotion is {dominant}."
+    return f"For the given statement, the system response is {result}. \
+    The dominant emotion is {dominant}."
 
 
 if __name__ == "__main__":
